@@ -129,7 +129,7 @@
         </div>
     </div>
 
-    <!-- Realistic 3D Physics and Animation Engine -->
+<!-- Realistic 3D Physics and Animation Engine -->
     <script>
         const butterfly = document.getElementById('butterfly');
         
@@ -184,27 +184,27 @@
             // 4. Calculate Intended Flight Direction
             let targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
             
-            // Only update rotation if it's actually moving to prevent twitching when stopped
+            // Only update rotation if it's actually moving
             if (velocity > 1) {
                 currentAngle = lerpAngle(currentAngle, targetAngle, 0.08);
             }
 
             // 5. Aerodynamic Banking (Roll)
-            // Butterfly leans into turns. We calculate the difference between where it's facing and where it wants to go.
             let angleDiff = ((targetAngle - currentAngle + 540) % 360) - 180;
-            let bankY = angleDiff * 0.6; // Multiply for effect intensity
+            let bankY = angleDiff * 0.6; 
             
-            // Clamp the bank angle to prevent it from flipping entirely upside down
+            // Clamp the bank angle
             bankY = Math.max(-50, Math.min(50, bankY));
 
             // 6. Altitude Breathing (Z-Axis Scale)
             let altitudeScale = 1 + Math.sin(time * 2.5) * 0.08;
 
-            // Apply global positioning, direction (Z), banking (Y), and altitude scale
+            // Apply global positioning
             butterfly.style.transform = `translate(${currentX}px, ${currentY}px) scale(${altitudeScale}) rotateZ(${currentAngle}deg) rotateY(${bankY}deg)`;
 
-            // 7. Dynamic Flap Speed
-            let flapSpeed = Math.max(0.08, 0.35 - (velocity * 0.015));
+            // 7. Dynamic Flap Speed (Updated for slower, graceful flapping)
+            // Increased from 0.08 to 0.25 (fastest flap) and 0.35 to 0.8 (slowest flap)
+            let flapSpeed = Math.max(0.25, 0.8 - (velocity * 0.015));
             document.documentElement.style.setProperty('--flap-speed', flapSpeed + 's');
 
             requestAnimationFrame(animateButterfly);
