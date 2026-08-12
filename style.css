@@ -390,9 +390,4 @@ body {
     0% { transform: rotateY(0deg); }
     100% { transform: rotateY(-70deg); }
 }
-
-@media (max-width: 768px) {
-    .butterfly-follower {
-        display: none;
-    }
 }
