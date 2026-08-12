@@ -136,7 +136,12 @@
         let targetY = window.innerHeight / 2;
         let currentX = window.innerWidth / 2;
         let currentY = window.innerHeight / 2;
+        
+        // 3D Physics Variables
         let currentAngle = 0;
+        let currentPitchX = 0;
+        let currentBankY = 0;
+        let lastFlapState = 'hover';
         let time = 0;
 
         // Desktop Mouse Tracking
@@ -156,7 +161,7 @@
             targetY = e.touches[0].clientY;
         }, { passive: true });
 
-        // Smooth angular interpolation
+        // Smooth angular interpolation to prevent 360-degree snapping
         function lerpAngle(a, b, t) {
             let delta = ((b - a + 540) % 360) - 180;
             return a + delta * t;
@@ -169,44 +174,60 @@
             let wanderX = Math.sin(time * 1.2) * 12;
             let wanderY = Math.cos(time * 1.5) * 12;
 
-            // 2. Smooth Interpolation (Lerp)
+            // 2. Smooth Position Interpolation
             let dx = (targetX + wanderX) - currentX;
             let dy = (targetY + wanderY) - currentY;
             
-            currentX += dx * 0.05;
-            currentY += dy * 0.05;
+            currentX += dx * 0.06;
+            currentY += dy * 0.06;
 
             // 3. Velocity Calculation
             let velocity = Math.sqrt(dx * dx + dy * dy);
 
-            // 4. Calculate Intended Flight Direction
+            // 4. Calculate Flight Direction
             let targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
             
-            // FIX: Only update rotation if it's moving fast enough (prevents twitching at cursor)
-            if (velocity > 3) {
-                currentAngle = lerpAngle(currentAngle, targetAngle, 0.06);
+            // Only update the direction if it's moving fast enough (stops spinning at rest)
+            if (velocity > 2) {
+                currentAngle = lerpAngle(currentAngle, targetAngle, 0.08);
             }
 
-            // 5. Aerodynamic Banking (Roll)
+            // 5. Aerodynamic Banking & Pitch (With Shock Absorbers)
             let angleDiff = ((targetAngle - currentAngle + 540) % 360) - 180;
             
-            // FIX: Multiply bank by a velocity factor. 
-            // This ensures it only tilts when flying fast, stopping the "crushing" when resting.
-            let velocityFactor = Math.min(velocity / 15, 1); 
-            let bankY = angleDiff * 0.5 * velocityFactor; 
-            
-            // Clamp the bank angle so it doesn't flip over
-            bankY = Math.max(-40, Math.min(40, bankY));
+            // Target 3D Rotations
+            let targetBankY = angleDiff * 0.5 * Math.min(velocity / 10, 1);
+            targetBankY = Math.max(-45, Math.min(45, targetBankY)); // Clamp to prevent flipping
+            let targetPitchX = Math.min(velocity * 1.2, 35);
 
-            // 6. Altitude Breathing (Z-Axis Scale)
-            let altitudeScale = 1 + Math.sin(time * 2.5) * 0.08;
+            // Smooth the 3D physics to prevent "seizures" or snapping
+            currentPitchX += (targetPitchX - currentPitchX) * 0.1;
+            currentBankY += (targetBankY - currentBankY) * 0.1;
 
-            // Apply global positioning
-            butterfly.style.transform = `translate(${currentX}px, ${currentY}px) scale(${altitudeScale}) rotateZ(${currentAngle}deg) rotateY(${bankY}deg)`;
+            // 6. Altitude Breathing
+            let altitudeScale = 1 + Math.sin(time * 2.5) * 0.06;
 
-            // 7. Dynamic Flap Speed
-            let flapSpeed = Math.max(0.25, 0.8 - (velocity * 0.015));
-            document.documentElement.style.setProperty('--flap-speed', flapSpeed + 's');
+            // Apply all 3D transforms seamlessly
+            butterfly.style.transform = `translate(${currentX}px, ${currentY}px) scale(${altitudeScale}) rotateZ(${currentAngle}deg) rotateX(${currentPitchX}deg) rotateY(${currentBankY}deg)`;
+
+            // 7. State-Based Flap Speed (Fixes the "Crushing" Bug)
+            // By putting the wings into clean "gears", we stop the CSS engine from spam-restarting the animation.
+            let flapState = 'hover';
+            let flapSpeed = '0.8s'; // Default slow hover
+
+            if (velocity > 12) {
+                flapState = 'fast';
+                flapSpeed = '0.12s';
+            } else if (velocity > 4) {
+                flapState = 'medium';
+                flapSpeed = '0.3s';
+            }
+
+            // Only tell CSS to update if the butterfly shifts gears
+            if (flapState !== lastFlapState) {
+                document.documentElement.style.setProperty('--flap-speed', flapSpeed);
+                lastFlapState = flapState;
+            }
 
             requestAnimationFrame(animateButterfly);
         }
