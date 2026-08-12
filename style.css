@@ -1,0 +1,398 @@
+/* =========================================
+   DEEP ROYAL NAVY VARIABLES (STRICT)
+========================================= */
+:root {
+    --navy: #313770;        
+    --beige: #FFF2CE;       
+    --green: #54BBB8;       
+    
+    --beige-line: rgba(255, 242, 206, 0.2);
+    --beige-glow: rgba(255, 242, 206, 0.1);
+    --green-glow: rgba(84, 187, 184, 0.4);
+
+    --font-core: 'Plus Jakarta Sans', sans-serif;
+    --ease-heavy: cubic-bezier(0.25, 1, 0.5, 1);
+    
+    /* Dynamic variable controlled by JS for synced flapping */
+    --flap-speed: 0.2s; 
+}
+
+* {
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-core);
+    background-color: var(--navy);
+    color: var(--beige);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    position: relative;
+    overflow-x: hidden;
+    cursor: crosshair; 
+}
+
+/* =========================================
+   NAVY ABYSS BACKGROUND
+========================================= */
+.navy-abyss {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    background-color: var(--navy);
+}
+
+.abyss-glow {
+    position: absolute;
+    top: -30%; left: 50%;
+    transform: translateX(-50%);
+    width: 80vw; height: 80vw;
+    background: radial-gradient(circle, var(--beige-glow) 0%, transparent 60%);
+    filter: blur(80px);
+    opacity: 0.5;
+}
+
+.grid-mesh {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(var(--beige-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--beige-line) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.15;
+}
+
+/* =========================================
+   THE MONOLITH CONTAINER
+========================================= */
+.monolith-container {
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    animation: fadeUp 1s var(--ease-heavy) forwards;
+    transform: translateY(30px);
+    opacity: 0;
+}
+
+@keyframes fadeUp {
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* =========================================
+   NAVY PROFILE HEADER
+========================================= */
+.navy-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.avatar-fortress {
+    position: relative;
+    width: 120px; height: 120px;
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.core-avatar {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    z-index: 2;
+    background-color: var(--navy);
+    border: 4px solid var(--navy);
+}
+
+.fortress-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px dashed var(--beige);
+    opacity: 0.4;
+    animation: rotateRing 20s linear infinite;
+    z-index: 1;
+}
+
+@keyframes rotateRing { 100% { transform: rotate(360deg); } }
+
+.navy-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    background: var(--navy);
+    border: 1px solid var(--beige-line);
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.green-spark {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px var(--green);
+    animation: sparkPulse 2s infinite;
+}
+
+@keyframes sparkPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.pill-text {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--beige);
+    text-transform: uppercase;
+}
+
+.stellar-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: var(--beige);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+}
+
+.stellar-subtitle {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: 0.3em;
+    margin-bottom: 2.5rem;
+}
+
+.navy-quote-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: var(--navy);
+    border: 1px solid var(--beige-line);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+.royal-quote {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--beige);
+    letter-spacing: 0.1em;
+}
+
+/* =========================================
+   SOLID NAVY LINK MATRIX
+========================================= */
+.navy-matrix {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.navy-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: var(--navy);
+    border: 2px solid var(--beige-line);
+    border-radius: 12px;
+    color: var(--beige);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: var(--ease-heavy) 0.4s;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.btn-layout {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    pointer-events: none;
+}
+
+.navy-btn svg {
+    width: 22px; height: 22px;
+    color: var(--beige);
+    transition: color 0.4s ease;
+}
+
+.navy-btn:hover {
+    transform: translateY(-4px);
+    background: var(--navy);
+    border-color: var(--green);
+    box-shadow: 
+        0 15px 30px rgba(0,0,0,0.25),
+        0 0 25px var(--green-glow);
+}
+
+.navy-btn:hover span,
+.navy-btn:hover svg {
+    color: var(--green);
+}
+
+.apex-btn {
+    background: var(--beige);
+    color: var(--navy);
+    border-color: var(--beige);
+}
+
+.apex-btn span, .apex-btn svg {
+    color: var(--navy);
+}
+
+.nav-arrow {
+    transition: transform 0.4s ease;
+}
+
+.apex-btn:hover {
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.apex-btn:hover span, .apex-btn:hover svg {
+    color: var(--navy);
+}
+
+.apex-btn:hover .nav-arrow {
+    transform: translateX(6px);
+}
+
+/* =========================================
+   CONNECTIVITY HUB
+========================================= */
+.connect-hub {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.hub-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: var(--beige);
+    opacity: 0.5;
+    margin-bottom: 1.5rem;
+}
+
+.hub-grid {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.navy-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    background: var(--navy);
+    border: 2px solid var(--beige-line);
+    color: var(--beige);
+    text-decoration: none;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    transition: all 0.4s var(--ease-heavy);
+}
+
+.navy-icon-btn svg {
+    width: 24px; height: 24px;
+    transition: all 0.4s ease;
+    pointer-events: none;
+}
+
+.navy-icon-btn:hover {
+    border-color: var(--green);
+    transform: translateY(-6px);
+    box-shadow: 
+        0 15px 25px rgba(0,0,0,0.25),
+        0 0 20px var(--green-glow);
+}
+
+.navy-icon-btn:hover svg {
+    color: var(--green);
+}
+
+/* =========================================
+   CSS 3D SPLIT-IMAGE BUTTERFLY
+========================================= */
+.butterfly-follower {
+    position: fixed;
+    top: -35px; left: -35px; /* Offset to center the 70px container */
+    width: 70px; height: 70px;
+    pointer-events: none; /* Let all clicks pass right through */
+    z-index: 9999;
+    perspective: 800px; /* Activates 3D depth */
+    will-change: transform;
+}
+
+.butterfly-body-container {
+    position: relative;
+    width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 15px 12px rgba(0,0,0,0.6));
+}
+
+.butterfly-wing {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: contain; 
+    will-change: transform;
+    /* Synchronized Flapping using JS controlled variable */
+    animation: flap var(--flap-speed) infinite alternate ease-in-out;
+}
+
+/* Left Half Cutout */
+.left-wing {
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+    transform-origin: 50% 50%;
+    animation-name: flapLeft;
+}
+
+/* Right Half Cutout */
+.right-wing {
+    clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+    transform-origin: 50% 50%;
+    animation-name: flapRight;
+}
+
+/* True 3D Rotations folding upward toward the user's screen */
+@keyframes flapLeft {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(70deg); }
+}
+
+@keyframes flapRight {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(-70deg); }
+}
+
+@media (max-width: 768px) {
+    .butterfly-follower {
+        display: none;
+    }
+}
