@@ -32,7 +32,7 @@
             </div>
 
             <h1 class="stellar-title">INTERNATIONAL</h1>
-            <h2 class="stellar-subtitle">MONTESSORI SCHOOL ERBIL</h2>
+            <h2 class="stellar-subtitle">MONTESSORI SCHOOL – ERBIL</h2>
             
             <!-- Floating Quote Panel -->
             <div class="navy-quote-panel">
@@ -128,8 +128,7 @@
             <img src="BUTTERFLY.png" alt="Right Wing" class="butterfly-wing right-wing">
         </div>
     </div>
-
-<!-- Realistic 3D Physics and Animation Engine -->
+    <!-- Realistic 3D Physics and Animation Engine -->
     <script>
         const butterfly = document.getElementById('butterfly');
         
@@ -146,19 +145,18 @@
             targetY = e.clientY;
         });
 
-        // Mobile Touch Tracking (When dragging finger)
+        // Mobile Touch Tracking
         document.addEventListener('touchmove', (e) => {
             targetX = e.touches[0].clientX;
             targetY = e.touches[0].clientY;
         }, { passive: true });
 
-        // Mobile Touch Tracking (When first tapping the screen)
         document.addEventListener('touchstart', (e) => {
             targetX = e.touches[0].clientX;
             targetY = e.touches[0].clientY;
         }, { passive: true });
 
-        // Smooth angular interpolation to prevent snapping
+        // Smooth angular interpolation
         function lerpAngle(a, b, t) {
             let delta = ((b - a + 540) % 360) - 180;
             return a + delta * t;
@@ -184,17 +182,21 @@
             // 4. Calculate Intended Flight Direction
             let targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
             
-            // Only update rotation if it's actually moving
-            if (velocity > 1) {
-                currentAngle = lerpAngle(currentAngle, targetAngle, 0.08);
+            // FIX: Only update rotation if it's moving fast enough (prevents twitching at cursor)
+            if (velocity > 3) {
+                currentAngle = lerpAngle(currentAngle, targetAngle, 0.06);
             }
 
             // 5. Aerodynamic Banking (Roll)
             let angleDiff = ((targetAngle - currentAngle + 540) % 360) - 180;
-            let bankY = angleDiff * 0.6; 
             
-            // Clamp the bank angle
-            bankY = Math.max(-50, Math.min(50, bankY));
+            // FIX: Multiply bank by a velocity factor. 
+            // This ensures it only tilts when flying fast, stopping the "crushing" when resting.
+            let velocityFactor = Math.min(velocity / 15, 1); 
+            let bankY = angleDiff * 0.5 * velocityFactor; 
+            
+            // Clamp the bank angle so it doesn't flip over
+            bankY = Math.max(-40, Math.min(40, bankY));
 
             // 6. Altitude Breathing (Z-Axis Scale)
             let altitudeScale = 1 + Math.sin(time * 2.5) * 0.08;
@@ -202,8 +204,7 @@
             // Apply global positioning
             butterfly.style.transform = `translate(${currentX}px, ${currentY}px) scale(${altitudeScale}) rotateZ(${currentAngle}deg) rotateY(${bankY}deg)`;
 
-            // 7. Dynamic Flap Speed (Updated for slower, graceful flapping)
-            // Increased from 0.08 to 0.25 (fastest flap) and 0.35 to 0.8 (slowest flap)
+            // 7. Dynamic Flap Speed
             let flapSpeed = Math.max(0.25, 0.8 - (velocity * 0.015));
             document.documentElement.style.setProperty('--flap-speed', flapSpeed + 's');
 
